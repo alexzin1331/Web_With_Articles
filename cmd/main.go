@@ -51,13 +51,13 @@ func main() {
 	grpcServer := grpc.NewServer()
 	sso.RegisterWebServiceServer(grpcServer, server)
 
-	lis, err := net.Listen("tcp", ":50051")
+	list, err := net.Listen("tcp", ":8080")
 	if err != nil {
 		log.Fatalf("Failed to listen: %v", err)
 	}
 
 	log.Println("Server is running on port 50051")
-	if err := grpcServer.Serve(lis); err != nil {
+	if err := grpcServer.Serve(list); err != nil {
 		log.Fatalf("Failed to serve: %v", err)
 	}
 }

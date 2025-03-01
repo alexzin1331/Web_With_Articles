@@ -8,6 +8,7 @@ require (
 )
 
 require (
+	github.com/alexzin1331/Web_With_Articles v0.0.0-20250214131415-c05422582742 // indirect
 	golang.org/x/net v0.32.0 // indirect
 	golang.org/x/sys v0.28.0 // indirect
 	golang.org/x/text v0.21.0 // indirect

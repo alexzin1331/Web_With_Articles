@@ -1,3 +1,5 @@
+github.com/alexzin1331/Web_With_Articles v0.0.0-20250214131415-c05422582742 h1:P6ztqBk0iwO6F+rLZ/5PIiYzsta28C72MLWvoxR/c1Q=
+github.com/alexzin1331/Web_With_Articles v0.0.0-20250214131415-c05422582742/go.mod h1:VvXnoG8xCOBtjmeMyOJ516HlWutuX5Sw4bgWAQp+TX8=
 github.com/go-logr/logr v1.4.2 h1:6pFjapn8bFcIbiKo3XT4j/BhANplGihG6tvd+8rYgrY=
 github.com/go-logr/logr v1.4.2/go.mod h1:9T104GzyrTigFIr8wt5mBrctHMim0Nb2HLGrmQ40KvY=
 github.com/go-logr/stdr v1.2.2 h1:hSWxHoqTgW2S2qGc0LTAI563KZ5YKYRhT3MFKZMbjag=
