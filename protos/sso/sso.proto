@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+package auth;
+
+option go_package = "Web_With_Articles.ssov1";
+
+service WebService{
+  rpc Register(RegisterRequest) returns (RegisterResponse);
+  rpc Login(LoginRequest) returns (LoginResponse);
+  rpc CreateArticle(Article) returns (CreateArticleResponse);
+  rpc GetArticles(Empty) returns (stream Article);
+  rpc AddComment(Comment) returns (AddCommentResponse);
+  rpc DeleteComment(DeleteCommRequest) returns (Empty);
+}
+
+message RegisterRequest {
+  string email = 1;
+  string password = 2;
+  string username = 3;
+}
+
+message RegisterResponse{
+  int64 user_id = 1;
+}
+
+message LoginRequest{
+  string email = 1;
+  string password = 2;
+  int32 add_id = 3;
+}
+
+message LoginResponse{
+  string token = 1;
+}
+
+message Article{
+  int64 id = 1;
+  string title = 2;
+  string content = 3;
+  string username = 4;
+}
+
+message CreateArticleResponse{
+  string message = 1;
+}
+
+message Empty{}
+
+message Comment {
+  int64 id = 1;
+  int64 article_id = 2;
+  string username = 3;
+  string content = 4;
+}
+
+message AddCommentResponse{
+  string message =2;
+}
+
+message DeleteCommRequest{
+  int64 id = 1;
+}
