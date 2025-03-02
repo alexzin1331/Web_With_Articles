@@ -1,14 +1,15 @@
-package cmd
+package main
 
 import (
 	"context"
 	"database/sql"
+	sso "github.com/alexzin1331/Web_With_Articles/protos/proto/gen"
+	_ "github.com/lib/pq"
 	"google.golang.org/grpc"
 	"log"
 	"mod1/internal/repository"
 	serv "mod1/internal/server"
 	"mod1/internal/services"
-	sso "mod1/protos/proto/gen"
 	"net"
 	"net/http"
 	"time"
@@ -56,7 +57,7 @@ func main() {
 		log.Fatalf("Failed to listen: %v", err)
 	}
 
-	log.Println("Server is running on port 50051")
+	log.Println("Server is running on port 8080")
 	if err := grpcServer.Serve(list); err != nil {
 		log.Fatalf("Failed to serve: %v", err)
 	}

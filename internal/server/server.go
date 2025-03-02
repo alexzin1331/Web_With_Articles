@@ -7,7 +7,8 @@ import (
 	"google.golang.org/grpc/status"
 	"log"
 	serv "mod1/internal/services"
-	sso "mod1/protos/proto/gen"
+	//sso "mod1/protos/proto/gen"
+	sso "github.com/alexzin1331/Web_With_Articles/protos/proto/gen"
 	//sso1 "github"
 	"sync"
 )
