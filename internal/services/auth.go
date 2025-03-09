@@ -57,3 +57,7 @@ func (s *Service) GetArticles() ([]article.Article, error) {
 func (s *Service) AddComment(ctx context.Context, articleID int64, content, username string) error {
 	return s.repo.AddComment(ctx, articleID, content, username)
 }
+
+func (s *Service) DeleteArticle(ctx context.Context, articleID int64) error {
+	return s.repo.DeleteArticle(ctx, articleID)
+}

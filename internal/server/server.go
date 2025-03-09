@@ -60,7 +60,8 @@ func (s *WebServiceServer) Login(ctx context.Context, req *sso.LoginRequest) (*s
 	if req.AddId == 0 {
 		return nil, status.Error(codes.InvalidArgument, "id is required")
 	}
-	token, err := s.Service.Login(ctx, req.GetEmail(), req.GetPassword(), int(req.GetAddId()))
+	appid := 0
+	token, err := s.Service.Login(ctx, req.GetEmail(), req.GetPassword(), appid)
 	if err != nil {
 		return nil, status.Error(codes.FailedPrecondition, "")
 	}
@@ -91,7 +92,7 @@ func (s *WebServiceServer) AddComment(ctx context.Context, req *sso.Comment) (*s
 	}, nil
 }
 
-func (s *WebServiceServer) GetArticles(req *sso.Empty, stream grpc.ServerStreamingServer[sso.Article]) error {
+func (s *WebServiceServer) GetArticles(req *sso.Empty, stream sso.WebService_GetArticlesServer) error {
 	articles, err := s.Service.GetArticles()
 	if err != nil {
 		log.Printf("Failed to get articles: %v", err)
@@ -109,4 +110,10 @@ func (s *WebServiceServer) GetArticles(req *sso.Empty, stream grpc.ServerStreami
 		}
 	}
 	return nil
+}
+
+func (s *WebServiceServer) DeleteArticle(ctx context.Context, req *sso.DeleteCommRequest) error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	err := s.Service.DeleteArticle(ctx, req.GetId())
 }

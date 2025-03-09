@@ -24,7 +24,7 @@ const (
 	WebService_CreateArticle_FullMethodName = "/auth.WebService/CreateArticle"
 	WebService_GetArticles_FullMethodName   = "/auth.WebService/GetArticles"
 	WebService_AddComment_FullMethodName    = "/auth.WebService/AddComment"
-	WebService_DeleteComment_FullMethodName = "/auth.WebService/DeleteComment"
+	WebService_DeleteArticle_FullMethodName = "/auth.WebService/DeleteArticle"
 )
 
 // WebServiceClient is the client API for WebService service.
@@ -36,7 +36,7 @@ type WebServiceClient interface {
 	CreateArticle(ctx context.Context, in *Article, opts ...grpc.CallOption) (*CreateArticleResponse, error)
 	GetArticles(ctx context.Context, in *Empty, opts ...grpc.CallOption) (grpc.ServerStreamingClient[Article], error)
 	AddComment(ctx context.Context, in *Comment, opts ...grpc.CallOption) (*AddCommentResponse, error)
-	DeleteComment(ctx context.Context, in *DeleteCommRequest, opts ...grpc.CallOption) (*Empty, error)
+	DeleteArticle(ctx context.Context, in *DeleteArticleRequest, opts ...grpc.CallOption) (*Empty, error)
 }
 
 type webServiceClient struct {
@@ -106,10 +106,10 @@ func (c *webServiceClient) AddComment(ctx context.Context, in *Comment, opts ...
 	return out, nil
 }
 
-func (c *webServiceClient) DeleteComment(ctx context.Context, in *DeleteCommRequest, opts ...grpc.CallOption) (*Empty, error) {
+func (c *webServiceClient) DeleteArticle(ctx context.Context, in *DeleteArticleRequest, opts ...grpc.CallOption) (*Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(Empty)
-	err := c.cc.Invoke(ctx, WebService_DeleteComment_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, WebService_DeleteArticle_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -125,7 +125,7 @@ type WebServiceServer interface {
 	CreateArticle(context.Context, *Article) (*CreateArticleResponse, error)
 	GetArticles(*Empty, grpc.ServerStreamingServer[Article]) error
 	AddComment(context.Context, *Comment) (*AddCommentResponse, error)
-	DeleteComment(context.Context, *DeleteCommRequest) (*Empty, error)
+	DeleteArticle(context.Context, *DeleteArticleRequest) (*Empty, error)
 	mustEmbedUnimplementedWebServiceServer()
 }
 
@@ -151,8 +151,8 @@ func (UnimplementedWebServiceServer) GetArticles(*Empty, grpc.ServerStreamingSer
 func (UnimplementedWebServiceServer) AddComment(context.Context, *Comment) (*AddCommentResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddComment not implemented")
 }
-func (UnimplementedWebServiceServer) DeleteComment(context.Context, *DeleteCommRequest) (*Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteComment not implemented")
+func (UnimplementedWebServiceServer) DeleteArticle(context.Context, *DeleteArticleRequest) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteArticle not implemented")
 }
 func (UnimplementedWebServiceServer) mustEmbedUnimplementedWebServiceServer() {}
 func (UnimplementedWebServiceServer) testEmbeddedByValue()                    {}
@@ -258,20 +258,20 @@ func _WebService_AddComment_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
-func _WebService_DeleteComment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteCommRequest)
+func _WebService_DeleteArticle_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteArticleRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(WebServiceServer).DeleteComment(ctx, in)
+		return srv.(WebServiceServer).DeleteArticle(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: WebService_DeleteComment_FullMethodName,
+		FullMethod: WebService_DeleteArticle_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(WebServiceServer).DeleteComment(ctx, req.(*DeleteCommRequest))
+		return srv.(WebServiceServer).DeleteArticle(ctx, req.(*DeleteArticleRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -300,8 +300,8 @@ var WebService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _WebService_AddComment_Handler,
 		},
 		{
-			MethodName: "DeleteComment",
-			Handler:    _WebService_DeleteComment_Handler,
+			MethodName: "DeleteArticle",
+			Handler:    _WebService_DeleteArticle_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{

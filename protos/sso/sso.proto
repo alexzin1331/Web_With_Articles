@@ -10,7 +10,7 @@ service WebService{
   rpc CreateArticle(Article) returns (CreateArticleResponse);
   rpc GetArticles(Empty) returns (stream Article);
   rpc AddComment(Comment) returns (AddCommentResponse);
-  rpc DeleteComment(DeleteCommRequest) returns (Empty);
+  rpc DeleteArticle(DeleteArticleRequest) returns (Empty);
 }
 
 message RegisterRequest {
@@ -57,6 +57,6 @@ message AddCommentResponse{
   string message =2;
 }
 
-message DeleteCommRequest{
-  int64 id = 1;
+message DeleteArticleRequest{
+  int64 id = 1; //это article_id
 }

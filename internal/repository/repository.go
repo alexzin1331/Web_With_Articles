@@ -22,12 +22,11 @@ func (r *Repository) Register(ctx context.Context, username, email, password str
 	if err != nil {
 		return -1, err
 	}
-	_, err = r.db.Exec("INSERT INTO users (username, email, password) VALUES ($1, $2, $3)", username, email, hashPass)
+	var id int64
+	err = r.db.QueryRow("INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING id", username, email, hashPass).Scan(&id)
 	if err != nil {
 		return -1, status.Errorf(codes.AlreadyExists, "User already exists")
 	}
-	var id int64
-	err = r.db.QueryRow("INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING id", username, email, hashPass).Scan(&id)
 	return id, nil
 }
 
@@ -46,7 +45,7 @@ func (r *Repository) Login(ctx context.Context, email, password string) (bool, e
 }
 
 func (r *Repository) CreateArticle(ctx context.Context, title, content, username string) error {
-	_, err := r.db.Exec("INSERT INTO artiles (title , content, username) VALUES ($1, $2, $3)", title, content, username)
+	_, err := r.db.Exec("INSERT INTO artiсles (title , content, username) VALUES ($1, $2, $3)", title, content, username)
 	return err
 }
 
@@ -60,6 +59,7 @@ func (r *Repository) GetArticles() ([]article.Article, error) {
 	if err != nil {
 		return nil, status.Error(codes.NotFound, "Articles not found")
 	}
+	defer rows.Close()
 	var articles []article.Article
 	for rows.Next() {
 		var article article.Article
@@ -69,4 +69,12 @@ func (r *Repository) GetArticles() ([]article.Article, error) {
 		articles = append(articles, article)
 	}
 	return articles, nil
+}
+
+func (r *Repository) DeleteArticle(ctx context.Context, articleID int64) error {
+	_, err := r.db.Exec("DELETE FROM articles WHERE id = $1", articleID)
+	if err != nil {
+		return status.Errorf(codes.NotFound, "Article not found")
+	}
+	return nil
 }

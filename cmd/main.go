@@ -12,6 +12,8 @@ import (
 	"mod1/internal/services"
 	"net"
 	"net/http"
+	"os"
+	"os/signal"
 	"time"
 )
 
@@ -61,14 +63,79 @@ func main() {
 	if err := grpcServer.Serve(list); err != nil {
 		log.Fatalf("Failed to serve: %v", err)
 	}
+
+	stop := make(chan os.Signal, 1)
+	signal.Notify(stop, os.Interrupt)
+	<-stop
+	log.Println("Shutting down server...")
+
 }
 
 /*
-google.golang.org/grpc
+вроде +- исправил косяки. осталось допилить след три туду и можно писать фронт.
 TODO: разобраться с конфигами
-TODO: разобраться с jwt-токенами
-TODO: закинуть в гпт на проверку и комментарии
+TODO: доделать изящную остановку
+TODO: доделать delete articles
+TODO: разобраться с jwt-токенами (все ли ок с ними?)
 TODO: попросить у гпт написать простой фронт для тестирования
 
 TODO: как доп задание написать тесты (юнит и функциональные)
 */
+
+/*
+middleware для валидации токена:
+
+import (
+    "context"
+    "fmt"
+    "github.com/golang-jwt/jwt/v5"
+    "google.golang.org/grpc"
+    "google.golang.org/grpc/codes"
+    "google.golang.org/grpc/metadata"
+    "google.golang.org/grpc/status"
+)
+
+func AuthInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
+    // Пропускаем аутентификацию для методов Register и Login
+    if info.FullMethod == "/auth.WebService/Register" || info.FullMethod == "/auth.WebService/Login" {
+        return handler(ctx, req)
+    }
+
+    // Извлекаем токен из метаданных
+    md, ok := metadata.FromIncomingContext(ctx)
+    if !ok {
+        return nil, status.Errorf(codes.Unauthenticated, "metadata is not provided")
+    }
+
+    token := md["authorization"]
+    if len(token) == 0 {
+        return nil, status.Errorf(codes.Unauthenticated, "authorization token is not provided")
+    }
+
+    // Парсим и валидируем токен
+    claims, err := parseToken(token[0])
+    if err != nil {
+        return nil, status.Errorf(codes.Unauthenticated, "invalid token: %v", err)
+    }
+
+    // Добавляем claims в контекст
+    ctx = context.WithValue(ctx, "claims", claims)
+    return handler(ctx, req)
+}
+
+func parseToken(tokenString string) (jwt.MapClaims, error) {
+    token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+        if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+            return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+        }
+        return []byte(os.Getenv("JWT_SECRET")), nil
+    })
+    if err != nil {
+        return nil, err
+    }
+
+    if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+        return claims, nil
+    }
+    return nil, fmt.Errorf("invalid token")
+}*/
